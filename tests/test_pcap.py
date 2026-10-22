@@ -146,6 +146,31 @@ class TestPcapNgReader(unittest.TestCase):
         self.assertEqual(len(packets), 1)
         self.assertEqual(packets[0].ts_ns, 0)
 
+    def test_packet_block(self):
+        # The obsolete Packet Block (block type 2) carries the interface id
+        # and drop count as 16 bit fields, then the timestamp and both
+        # lengths, so the packet data starts 20 bytes into the body.
+        stored = 1_600_000_000_123_456_789 // 1_000  # microsecond resolution
+        body = (
+            struct.pack(
+                "<HHIIII",
+                0,
+                0,
+                stored >> 32,
+                stored & 0xFFFFFFFF,
+                len(FRAME),
+                len(FRAME),
+            )
+            + FRAME
+        )
+        blob = pcapng_section() + pcapng_interface() + pcapng_block(2, body)
+        packets = list(read_capture(_write_temp(blob, ".pcapng")))
+        self.assertEqual(len(packets), 1)
+        self.assertEqual(packets[0].ts_ns, 1_600_000_000_123_456_000)
+        self.assertEqual(packets[0].data, FRAME)
+        self.assertEqual(packets[0].orig_len, len(FRAME))
+        self.assertEqual(packets[0].linktype, 1)
+
     def test_unknown_block_is_skipped_by_its_length(self):
         blob = (
             pcapng_section()

@@ -12,7 +12,9 @@ Two kinds of test live here and both matter:
 from __future__ import annotations
 
 import json
+import tempfile
 import unittest
+from pathlib import Path
 
 from helpers import index_from_frames, report_for, report_from_frames, rules_for
 from netwatch.demo import SCENARIOS, CaptureBuilder, GATEWAY, SERVER, tcp
@@ -202,6 +204,29 @@ class TestCleartextCredentials(unittest.TestCase):
         # The username survives only in masked form.
         self.assertNotIn('"youcef"', serialized)
         self.assertIn("[redacted]", serialized)
+        # The findings mask the value, but the alert also cites packet bytes,
+        # and those bytes reach the report JSON, the HTML and the HTTP API.
+        # Hex encoding is a change of format, not a redaction: this grep of
+        # the plaintext alone is exactly how a hexdump full of credentials
+        # once shipped. Decode every cited frame and search it for the
+        # credential bytes as well.
+        secrets = (b"Atias2026!", b"atias-demo-password", b"youcef")
+        for alert in report["alerts"]:
+            for packet in alert["packets"]:
+                if not packet.get("hex"):
+                    continue
+                frame = bytes.fromhex(packet["hex"])
+                for secret in secrets:
+                    self.assertNotIn(secret, frame)
+        # For a cleartext-credential alert specifically the bytes are not
+        # merely absent but withheld: the reference keeps the packet number
+        # and says why it carries no hexdump.
+        alert = next(a for a in report["alerts"] if a["rule"] == "cleartext_credentials")
+        self.assertTrue(alert["packets"])
+        for packet in alert["packets"]:
+            self.assertNotIn("hex", packet)
+            self.assertIn("note", packet)
+            self.assertIn("withheld", packet["note"])
 
     def test_encrypted_traffic_does_not_fire(self):
         b = builder()
@@ -278,6 +303,61 @@ class TestRuleFramework(unittest.TestCase):
     def test_statuses_cover_every_rule_every_time(self):
         _, statuses = rules_for(index_from_frames(builder().frames))
         self.assertEqual({status.rule for status in statuses}, set(DEFAULT_CONFIG))
+
+
+class TestConfigValues(unittest.TestCase):
+    """Rule settings: a value of the wrong type is a load-time error, and a
+    threshold can be turned down only as far as a measurement still makes
+    sense."""
+
+    def _config_file(self, document: object) -> Path:
+        path = Path(tempfile.mkdtemp()) / "rules.json"
+        path.write_text(json.dumps(document), encoding="utf-8")
+        return path
+
+    def test_a_single_connection_with_min_connections_one_stays_silent(self):
+        # One deduped connection has no intervals to measure, and statistics
+        # over an empty list should read as "not yet a pattern", not blow up
+        # the analysis.
+        b = builder()
+        b.emit(
+            10.0,
+            b.lan("10.20.0.21", GATEWAY, tcp("10.20.0.21", "203.0.113.45", 50000, 8443, flags=0x02)),
+        )
+        alerts, _ = rules_for(
+            index_from_frames(b.frames), config={"beaconing": {"min_connections": 1}}
+        )
+        self.assertEqual([a for a in alerts if a.rule == "beaconing"], [])
+
+    def test_a_null_number_is_rejected_with_the_rule_and_setting_named(self):
+        from netwatch.engine import CaptureError, load_config
+
+        path = self._config_file({"port_scan": {"distinct_ports": None}})
+        with self.assertRaises(CaptureError) as caught:
+            load_config(path)
+        self.assertIn("port_scan.distinct_ports", str(caught.exception))
+
+    def test_a_string_number_is_rejected(self):
+        from netwatch.engine import CaptureError, load_config
+
+        path = self._config_file({"beaconing": {"min_interval_s": "5"}})
+        with self.assertRaises(CaptureError) as caught:
+            load_config(path)
+        self.assertIn("must be a number", str(caught.exception))
+
+    def test_enabled_must_be_true_or_false(self):
+        from netwatch.engine import CaptureError, load_config
+
+        path = self._config_file({"port_scan": {"enabled": "yes"}})
+        with self.assertRaises(CaptureError) as caught:
+            load_config(path)
+        self.assertIn("must be true or false", str(caught.exception))
+
+    def test_numbers_and_booleans_load(self):
+        from netwatch.engine import load_config
+
+        path = self._config_file({"port_scan": {"distinct_ports": 40, "enabled": False}})
+        self.assertEqual(load_config(path), {"port_scan": {"distinct_ports": 40, "enabled": False}})
 
 
 if __name__ == "__main__":

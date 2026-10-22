@@ -112,13 +112,32 @@ def _iso(ts_ns: int) -> str:
     return datetime.fromtimestamp(ts_ns / 1e9, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-def _packet_refs(index: TrafficIndex, packet_indices: list[int], limit: int = 3) -> list[dict[str, object]]:
-    """Build the auditable packet references for an alert."""
+def _packet_refs(
+    index: TrafficIndex,
+    packet_indices: list[int],
+    limit: int = 3,
+    *,
+    withhold_payload: bool = False,
+) -> list[dict[str, object]]:
+    """Build the auditable packet references for an alert.
+
+    A rule that found a secret inside the payload must pass
+    ``withhold_payload``. The reference then keeps the packet number and, when
+    the bytes were retained, their length - both harmless - but the bytes
+    themselves never leave the process. Hex encoding is a change of format,
+    not a redaction: a report that masks ``PASS ****`` in one field while
+    carrying the same password in a hexdump beside it has not redacted
+    anything.
+    """
     refs: list[dict[str, object]] = []
     for packet_index in packet_indices[:limit]:
         sample = index.raw.get(packet_index)
-        ref = {"packet": packet_index}
-        if sample:
+        ref: dict[str, object] = {"packet": packet_index}
+        if withhold_payload:
+            ref["note"] = "packet bytes withheld: this frame carries the credential in the clear"
+            if sample:
+                ref["bytes"] = len(sample)
+        elif sample:
             ref["hex"] = binascii.hexlify(sample).decode("ascii")
             ref["bytes"] = len(sample)
         else:
@@ -422,6 +441,11 @@ def rule_beaconing(ctx: RuleContext) -> list[Alert]:
         for timestamp in timestamps:
             if not deduped or timestamp - deduped[-1] > 1_000_000_000:
                 deduped.append(timestamp)
+        if len(deduped) < 2:
+            # One connection has no intervals yet, and statistics over an
+            # empty list raises StatisticsError instead of measuring
+            # anything. A short flow is a non-finding, not a crash.
+            continue
         if len(deduped) < min_connections:
             continue
         if address_scope(src) != "internal" or address_scope(dst) != "external":
@@ -523,7 +547,11 @@ def rule_cleartext_credentials(ctx: RuleContext) -> list[Alert]:
                     "findings": findings,
                     "secret_redacted": True,
                 },
-                packets=_packet_refs(ctx.index, flow.sample_packets),
+                # The frames these packet numbers point at carry the credential
+                # in the clear, so their bytes are withheld here even though
+                # the archive still holds them. Redaction that stops at the
+                # value in "findings" is not redaction.
+                packets=_packet_refs(ctx.index, flow.sample_packets, withhold_payload=True),
             )
         )
     return alerts

@@ -3,7 +3,7 @@
   "tool": {
     "name": "NetWatch",
     "version": "1.0.0",
-    "generated_at": "2026-10-22T18:28:12Z"
+    "generated_at": "2026-10-22T22:12:40Z"
   },
   "capture": {
     "name": "mixed.pcap",
@@ -533,12 +533,12 @@
       "packets": [
         {
           "packet": 768,
-          "hex": "02000000000102000000002108004500003500004000400606600a140015c6336407c2240015000003e8000000015018faf0bc4100005553455220796f756365660d0a",
+          "note": "packet bytes withheld: this frame carries the credential in the clear",
           "bytes": 67
         },
         {
           "packet": 770,
-          "hex": "020000000001020000000021080045000039000040004006065c0a140015c6336407c2240015000003e8000000015018faf0911e00005041535320417469617332303236210d0a",
+          "note": "packet bytes withheld: this frame carries the credential in the clear",
           "bytes": 71
         }
       ]
@@ -569,17 +569,17 @@
       "packets": [
         {
           "packet": 155,
-          "hex": "02000000000102000000002108004500008a000040004006fa6a0a1400155db8d822c2940050000003e8000000005002faf0ce690000474554202f20485454502f312e310d0a486f73743a207777772e6578616d706c652e636f6d0d0a557365722d4167656e743a204d6f7a696c6c612f352e300d0a4163636570743a202a2f",
+          "note": "packet bytes withheld: this frame carries the credential in the clear",
           "bytes": 128
         },
         {
           "packet": 264,
-          "hex": "02000000000102000000002108004500008a000040004006fa6a0a1400155db8d822c2940050000003e8000000005002faf0ce690000474554202f20485454502f312e310d0a486f73743a207777772e6578616d706c652e636f6d0d0a557365722d4167656e743a204d6f7a696c6c612f352e300d0a4163636570743a202a2f",
+          "note": "packet bytes withheld: this frame carries the credential in the clear",
           "bytes": 128
         },
         {
           "packet": 772,
-          "hex": "0200000000010200000000210800450000cf000040004006fa250a1400155db8d822c2940050000003e8000000005002faf08d3c0000474554202f61646d696e20485454502f312e310d0a486f73743a20696e7472616e65742e6578616d706c652e6e65740d0a557365722d4167656e743a204d6f7a696c6c612f352e300d0a",
+          "note": "packet bytes withheld: this frame carries the credential in the clear",
           "bytes": 128
         }
       ]
@@ -672,8 +672,8 @@
   },
   "baseline": {
     "present": true,
-    "description": "5 hosts, 96 packets, built 2026-10-22T18:28:12Z",
-    "created": "2026-10-22T18:28:12Z"
+    "description": "5 hosts, 96 packets, built 2026-10-22T22:12:40Z",
+    "created": "2026-10-22T22:12:40Z"
   },
   "integrity": {
     "truncated_packets": 0,

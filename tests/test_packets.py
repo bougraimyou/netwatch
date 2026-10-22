@@ -9,7 +9,11 @@ import unittest
 from netwatch.demo import dns_query, ethernet, icmp_echo, ipv4, tcp, udp
 from netwatch.packets import (
     LINKTYPE_ETHERNET,
+    LINKTYPE_IPV4,
+    LINKTYPE_IPV6,
     LINKTYPE_LINUX_SLL,
+    LINKTYPE_LINUX_SLL2,
+    LINKTYPE_NULL,
     LINKTYPE_RAW,
     Packet,
     address_scope,
@@ -145,6 +149,73 @@ class TestLinkTypes(unittest.TestCase):
         header = struct.pack("!HHH", 0, 1, 6) + b"\x00" * 8 + struct.pack("!H", 0x0800)
         packet = capture(header + inner, linktype=LINKTYPE_LINUX_SLL)
         self.assertEqual(packet.dport, 22)
+
+    def test_linux_cooked_capture_v2(self):
+        inner = tcp(CLIENT, SERVER, 1234, 22, payload=b"x")
+        # SLL2 header, 20 bytes: protocol, reserved, interface index, ARPHRD,
+        # packet type, link address length, then the link address itself. The
+        # protocol sits at the front, the payload after the fixed fields.
+        header = struct.pack("!HHIHBB", 0x0800, 0, 2, 1, 0, 6) + b"\x00" * 8
+        packet = capture(header + inner, linktype=LINKTYPE_LINUX_SLL2)
+        self.assertEqual(packet.src, CLIENT)
+        self.assertEqual(packet.dst, SERVER)
+        self.assertEqual(packet.sport, 1234)
+        self.assertEqual(packet.dport, 22)
+        self.assertEqual(packet.proto, "TCP")
+        self.assertEqual(packet.payload, b"x")
+
+    def test_sll2_unknown_protocol_is_labelled_not_guessed(self):
+        inner = tcp(CLIENT, SERVER, 1234, 22)
+        header = struct.pack("!HHIHBB", 0x1234, 0, 2, 1, 0, 6) + b"\x00" * 8
+        packet = capture(header + inner, linktype=LINKTYPE_LINUX_SLL2)
+        self.assertEqual(packet.proto, "SLL2/0x1234")
+        self.assertIsNone(packet.sport)
+
+    def test_null_loopback_family_is_host_byte_order(self):
+        inner = tcp(CLIENT, SERVER, 1234, 22)
+        # DLT_NULL stores a 4 byte address-family value in host byte order;
+        # 2 is AF_INET on the systems this link type is captured on.
+        packet = capture(struct.pack("=I", 2) + inner, linktype=LINKTYPE_NULL)
+        self.assertEqual(packet.src, CLIENT)
+        self.assertEqual(packet.dst, SERVER)
+        self.assertEqual(packet.proto, "TCP")
+        self.assertEqual(packet.dport, 22)
+
+    def test_null_ipv6_family_is_recognised(self):
+        segment = struct.pack("!HHIIBBHHH", 40000, 22, 1, 0, 5 << 4, 0x02, 8192, 0, 0)
+        src = socket.inet_pton(socket.AF_INET6, "fd00::21")
+        dst = socket.inet_pton(socket.AF_INET6, "2001:db8::10")
+        datagram = struct.pack("!IHBB", 0x60000000, len(segment), 6, 64) + src + dst + segment
+        # AF_INET6 is 10 on Linux, 24 and 28 and 30 on the BSDs.
+        for family in (10, 24, 28, 30):
+            packet = capture(struct.pack("=I", family) + datagram, linktype=LINKTYPE_NULL)
+            with self.subTest(family=family):
+                self.assertEqual(packet.proto, "TCP")
+                self.assertEqual(packet.dport, 22)
+
+    def test_null_unknown_family_is_labelled_not_guessed(self):
+        packet = capture(struct.pack("=I", 1) + tcp(CLIENT, SERVER, 1234, 22), linktype=LINKTYPE_NULL)
+        self.assertEqual(packet.proto, "NULL/0x0000")
+        self.assertIsNone(packet.sport)
+
+    def test_ipv4_linktype_starts_at_the_ip_header(self):
+        packet = capture(tcp(CLIENT, SERVER, 1234, 22, payload=b"y"), linktype=LINKTYPE_IPV4)
+        self.assertEqual(packet.src, CLIENT)
+        self.assertEqual(packet.proto, "TCP")
+        self.assertEqual(packet.dport, 22)
+        self.assertEqual(packet.payload, b"y")
+
+    def test_ipv6_linktype_starts_at_the_ip_header(self):
+        segment = struct.pack("!HHIIBBHHH", 40000, 22, 1, 0, 5 << 4, 0x02, 8192, 0, 0)
+        src = socket.inet_pton(socket.AF_INET6, "fd00::21")
+        dst = socket.inet_pton(socket.AF_INET6, "2001:db8::10")
+        datagram = struct.pack("!IHBB", 0x60000000, len(segment), 6, 64) + src + dst + segment
+        packet = capture(datagram, linktype=LINKTYPE_IPV6)
+        self.assertEqual(packet.src, "fd00::21")
+        self.assertEqual(packet.dst, "2001:db8::10")
+        self.assertEqual(packet.proto, "TCP")
+        self.assertEqual(packet.dport, 22)
+        self.assertTrue(packet.is_syn_only)
 
     def test_unsupported_link_type_is_reported_not_guessed(self):
         packet = capture(b"\x00" * 32, linktype=999)

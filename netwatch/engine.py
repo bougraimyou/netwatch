@@ -70,7 +70,20 @@ def expand_paths(paths: list[str]) -> list[Path]:
             resolved.append(path)
     if not resolved:
         raise CaptureError("no captures to analyze")
-    return resolved
+    # Pointing a directory at one of its own members names the same capture
+    # twice, and analyzing it twice would count every packet in it twice over
+    # in a report that looks normal to a reader. Deduping is on the resolved
+    # absolute path so spellings and symlinks do not matter; the first
+    # occurrence keeps its place, so the ordering stays deterministic.
+    unique: list[Path] = []
+    seen: set[Path] = set()
+    for path in resolved:
+        absolute = path.resolve()
+        if absolute in seen:
+            continue
+        seen.add(absolute)
+        unique.append(path)
+    return unique
 
 
 def build_index(paths: list[str]) -> IndexResult:
@@ -78,6 +91,7 @@ def build_index(paths: list[str]) -> IndexResult:
     index = TrafficIndex()
     sources: list[SourceStats] = []
     files = expand_paths(paths)
+    base = 0
     for path in files:
         packets = 0
         wire = 0
@@ -87,6 +101,14 @@ def build_index(paths: list[str]) -> IndexResult:
                 packets += 1
                 wire += raw.orig_len
                 linktype = raw.linktype
+                # Packet numbers count within one file, and this loop folds
+                # every file into one index keyed by that number. Continuing
+                # each file's numbering from the total so far is what keeps
+                # the second file from taking over the first one's keys - the
+                # raw byte archive, the flow samples and the rule evidence all
+                # take the number from this single point where a packet enters
+                # the pipeline, so one decision here covers every consumer.
+                raw.index += base
                 index.add(decode(raw))
         except PcapError as exc:
             raise CaptureError(f"{path}: {exc}") from exc
@@ -95,6 +117,7 @@ def build_index(paths: list[str]) -> IndexResult:
         sources.append(
             SourceStats(path=str(path), packets=packets, wire_bytes=wire, linktype=linktype)
         )
+        base += packets
     return IndexResult(index=index, sources=sources)
 
 
@@ -103,7 +126,10 @@ def load_config(path: str | Path | None) -> dict[str, dict[str, object]]:
 
     Unknown top-level keys are rejected: a typo in a threshold name would
     otherwise silently leave the default in place, which is exactly the kind of
-    quiet misconfiguration a detection tool must not have.
+    quiet misconfiguration a detection tool must not have. The type of each
+    value is checked against the built-in default for the same reason: a string
+    or ``null`` in place of a number would survive loading and fail deep inside
+    a rule, long after the file that caused it was read.
     """
     if path is None:
         return {}
@@ -132,6 +158,22 @@ def load_config(path: str | Path | None) -> dict[str, dict[str, object]]:
             raise CaptureError(
                 f"{path}: unknown setting(s) for {rule}: {', '.join(sorted(unknown_settings))}"
             )
+        for name, value in settings.items():
+            # Every default is either a boolean (``enabled``) or a number, so
+            # the default's own type is the contract for the value. Note that
+            # a JSON ``true`` is an ``int`` in Python, so booleans are
+            # excluded explicitly before the number check.
+            if isinstance(DEFAULT_CONFIG[rule][name], bool):
+                valid, expected = isinstance(value, bool), "true or false"
+            else:
+                valid, expected = (
+                    not isinstance(value, bool) and isinstance(value, (int, float)),
+                    "a number",
+                )
+            if not valid:
+                raise CaptureError(
+                    f"{path}: setting {rule}.{name} must be {expected}, got {value!r}"
+                )
     return data
 
 

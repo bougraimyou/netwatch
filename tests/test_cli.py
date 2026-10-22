@@ -162,5 +162,35 @@ class TestOtherCommands(unittest.TestCase):
         self.assertIn("captures", result.stderr)
 
 
+class TestReportShapeErrors(unittest.TestCase):
+    """A report file is trusted input for the renderer and the server, so a
+    file that is valid JSON but not a netwatch report must be refused with
+    exit 2 and the file named - not an AttributeError from mid-render."""
+
+    def _write(self, content: str) -> str:
+        path = Path(tempfile.mkdtemp()) / "report.json"
+        path.write_text(content, encoding="utf-8")
+        return str(path)
+
+    def test_report_rejects_documents_that_are_not_reports(self):
+        for content in ("123", "[]", '"x"', "{}"):
+            with self.subTest(content=content):
+                out = Path(tempfile.mkdtemp()) / "standalone.html"
+                result = run_cli("report", self._write(content), "--out", str(out))
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("not a netwatch report", result.stderr)
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertFalse(out.exists())
+
+    def test_serve_rejects_a_bad_report_before_binding_a_socket(self):
+        # If the validation happened after the bind, the server would hold the
+        # process open and this run_cli call would hit its timeout instead of
+        # returning exit 2.
+        result = run_cli("serve", "--report", self._write('"x"'), timeout=15)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("not a netwatch report", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()

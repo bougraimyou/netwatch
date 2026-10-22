@@ -11,7 +11,13 @@ After=network-online.target
 Type=simple
 User=netwatch
 Group=netwatch
-ExecStart=/usr/bin/env netwatch serve --report /var/lib/netwatch/report.json --host 0.0.0.0 --port 8080
+# --host 127.0.0.1 is the shipped default deliberately: the dashboard API has
+# no authentication, so publishing it to the network is a decision an operator
+# must make, not a default to inherit. To expose it, override the unit with
+#   sudo systemctl edit netwatch.service
+# and repeat ExecStart there with --host 0.0.0.0 (or another interface
+# address) -- plus whatever network-layer restriction you intend to depend on.
+ExecStart=/usr/bin/env netwatch serve --report /var/lib/netwatch/report.json --host 127.0.0.1 --port 8080
 Restart=on-failure
 RestartSec=5
 NoNewPrivileges=true

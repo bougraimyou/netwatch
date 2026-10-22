@@ -93,6 +93,37 @@ def _capture_name(paths: list[str], sources) -> str:
     return f"{len(sources)} captures"
 
 
+def _load_report(path: str | Path) -> dict[str, object]:
+    """Read a report JSON and require the published shape.
+
+    Everything downstream of a report file - the HTML renderer, the HTTP
+    handler - indexes the document as the structure ``netwatch analyze``
+    writes. A file that is valid JSON but not a report is refused here, with
+    the file named, instead of surfacing as an AttributeError after the work
+    has started. A baseline load does the same for its own shape.
+    """
+    path = Path(path)
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        raise CaptureError(f"{path}: no such file") from None
+    except json.JSONDecodeError as exc:
+        raise CaptureError(f"{path}: not valid JSON ({exc})") from exc
+    if not isinstance(data, dict):
+        raise CaptureError(f"{path}: not a netwatch report file (top level must be a JSON object)")
+    missing = [
+        key
+        for key, expected in (("capture", dict), ("alerts", list), ("rules", list), ("rule_summary", dict))
+        if not isinstance(data.get(key), expected)
+    ]
+    if missing:
+        raise CaptureError(
+            f"{path}: not a netwatch report file (missing the "
+            f"{', '.join(repr(key) for key in missing)} section(s))"
+        )
+    return data
+
+
 # ---------------------------------------------------------------------------
 # commands
 # ---------------------------------------------------------------------------
@@ -201,13 +232,7 @@ def cmd_baseline(args: argparse.Namespace) -> int:
 
 
 def cmd_report(args: argparse.Namespace) -> int:
-    report_path = Path(args.report)
-    try:
-        report = json.loads(report_path.read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        raise CaptureError(f"{report_path}: no such file") from None
-    except json.JSONDecodeError as exc:
-        raise CaptureError(f"{report_path}: not valid JSON ({exc})") from exc
+    report = _load_report(args.report)
     Path(args.out).write_text(render_html(report), encoding="utf-8")
     print(f"  report written to {args.out}")
     return 0
@@ -215,12 +240,10 @@ def cmd_report(args: argparse.Namespace) -> int:
 
 def cmd_serve(args: argparse.Namespace) -> int:
     if args.report:
-        try:
-            report = json.loads(Path(args.report).read_text(encoding="utf-8"))
-        except FileNotFoundError:
-            raise CaptureError(f"{args.report}: no such file") from None
-        except json.JSONDecodeError as exc:
-            raise CaptureError(f"{args.report}: not valid JSON ({exc})") from exc
+        # Read and validate before anything is bound: a bad report file must
+        # end the process with exit 2, not leave a half-started dashboard
+        # behind.
+        report = _load_report(args.report)
     else:
         config = load_config(args.config)
         baseline = load_baseline(args.baseline) if args.baseline else None
