@@ -41,6 +41,9 @@ jobs:
           print("demo report:", report["alert_count"], "alerts across", sorted(rules))
           PY
       - uses: actions/configure-pages@v5
+        with:
+          # First push: turn Pages on rather than failing the deploy step.
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
