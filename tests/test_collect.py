@@ -18,6 +18,8 @@ from netwatch.collect import CaptureNotPermitted, collect, iface_exists
 
 class TestCollectGuards(unittest.TestCase):
     def test_missing_interface_is_reported_with_the_known_names(self):
+        if not sys.platform.startswith("linux"):
+            self.skipTest("the interface lookup reads /sys/class/net, which only exists on Linux")
         with self.assertRaises(CaptureNotPermitted) as caught:
             collect("definitely-not-an-interface", Path(tempfile.mkdtemp()) / "out.pcap", duration=0.1)
         message = str(caught.exception)
@@ -32,6 +34,8 @@ class TestCollectGuards(unittest.TestCase):
         self.assertIn("Linux", str(caught.exception))
 
     def test_iface_exists_matches_the_sysfs_view(self):
+        if not sys.platform.startswith("linux"):
+            self.skipTest("the interface lookup reads /sys/class/net, which only exists on Linux")
         self.assertTrue(iface_exists("lo"))
         self.assertFalse(iface_exists("lo-but-not-really"))
 
