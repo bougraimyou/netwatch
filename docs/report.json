@@ -3,7 +3,7 @@
   "tool": {
     "name": "NetWatch",
     "version": "1.0.0",
-    "generated_at": "2026-10-22T17:32:59Z"
+    "generated_at": "2026-10-22T18:28:12Z"
   },
   "capture": {
     "name": "mixed.pcap",
@@ -672,8 +672,8 @@
   },
   "baseline": {
     "present": true,
-    "description": "5 hosts, 96 packets, built 2026-10-22T17:32:58Z",
-    "created": "2026-10-22T17:32:58Z"
+    "description": "5 hosts, 96 packets, built 2026-10-22T18:28:12Z",
+    "created": "2026-10-22T18:28:12Z"
   },
   "integrity": {
     "truncated_packets": 0,
