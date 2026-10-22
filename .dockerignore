@@ -1,0 +1,6 @@
+.git
+demo
+build
+docs/captures
+**/__pycache__
+tests

@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "created": "2026-10-22T17:25:33Z",
+  "note": "generated demo baseline",
+  "window": {
+    "start": "2025-10-09T08:53:21Z",
+    "end": "2025-10-09T08:58:07Z",
+    "duration_s": 286.973,
+    "packets": 96
+  },
+  "sources": [],
+  "hosts": {
+    "10.20.0.22": {
+      "external_peers": [
+        "93.184.216.34"
+      ],
+      "ports_contacted": [
+        53,
+        80,
+        443
+      ],
+      "protocols": {
+        "TCP": 16,
+        "UDP": 8,
+        "ICMP": 1
+      },
+      "bytes_out": 691,
+      "bytes_in": 352,
+      "dns_queries": 4
+    },
+    "10.20.0.1": {
+      "external_peers": [],
+      "ports_contacted": [
+        123,
+        51234
+      ],
+      "protocols": {
+        "UDP": 50,
+        "ICMP": 4
+      },
+      "bytes_out": 1243,
+      "bytes_in": 1103,
+      "dns_queries": 0
+    },
+    "10.20.0.23": {
+      "external_peers": [
+        "93.184.216.34"
+      ],
+      "ports_contacted": [
+        22,
+        53,
+        80,
+        443
+      ],
+      "protocols": {
+        "TCP": 22,
+        "UDP": 12,
+        "ICMP": 1
+      },
+      "bytes_out": 882,
+      "bytes_in": 356,
+      "dns_queries": 6
+    },
+    "10.20.0.10": {
+      "external_peers": [],
+      "ports_contacted": [
+        51000
+      ],
+      "protocols": {
+        "TCP": 24
+      },
+      "bytes_out": 0,
+      "bytes_in": 702,
+      "dns_queries": 0
+    },
+    "10.20.0.21": {
+      "external_peers": [
+        "93.184.216.34"
+      ],
+      "ports_contacted": [
+        22,
+        53,
+        80,
+        443
+      ],
+      "protocols": {
+        "TCP": 14,
+        "UDP": 10,
+        "ICMP": 2
+      },
+      "bytes_out": 616,
+      "bytes_in": 283,
+      "dns_queries": 5
+    }
+  }
+}

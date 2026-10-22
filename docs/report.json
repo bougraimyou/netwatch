@@ -1,0 +1,690 @@
+{
+  "report_version": 1,
+  "tool": {
+    "name": "NetWatch",
+    "version": "1.0.0",
+    "generated_at": "2026-10-22T17:32:59Z"
+  },
+  "capture": {
+    "name": "mixed.pcap",
+    "packets": 944,
+    "wire_bytes": 79705,
+    "wire_bytes_human": "77.8 KB",
+    "payload_bytes": 35153,
+    "payload_bytes_human": "34.3 KB",
+    "duration_s": 1784.969,
+    "start": "2026-10-21T08:00:01Z",
+    "end": "2026-10-21T08:29:45Z",
+    "flows": 237,
+    "hosts": 8,
+    "dns_observations": 474,
+    "dns_queries": 237
+  },
+  "protocols": [
+    {
+      "name": "UDP",
+      "packets": 530
+    },
+    {
+      "name": "TCP",
+      "packets": 410
+    },
+    {
+      "name": "ICMP",
+      "packets": 4
+    }
+  ],
+  "top_flows": [
+    {
+      "src": "10.20.0.1",
+      "sport": 53,
+      "dst": "10.20.0.22",
+      "dport": 51234,
+      "proto": "UDP",
+      "packets": 184,
+      "bytes": 10768,
+      "bytes_human": "10.5 KB",
+      "duration_s": 1734.828
+    },
+    {
+      "src": "10.20.0.22",
+      "sport": 51234,
+      "dst": "10.20.0.1",
+      "dport": 53,
+      "proto": "UDP",
+      "packets": 184,
+      "bytes": 10384,
+      "bytes_human": "10.1 KB",
+      "duration_s": 1734.828
+    },
+    {
+      "src": "10.20.0.1",
+      "sport": 123,
+      "dst": "10.20.0.1",
+      "dport": 123,
+      "proto": "UDP",
+      "packets": 56,
+      "bytes": 2688,
+      "bytes_human": "2.6 KB",
+      "duration_s": 1728.005
+    },
+    {
+      "src": "10.20.0.1",
+      "sport": 53,
+      "dst": "10.20.0.23",
+      "dport": 51234,
+      "proto": "UDP",
+      "packets": 27,
+      "bytes": 1431,
+      "bytes_human": "1.4 KB",
+      "duration_s": 1727.773
+    },
+    {
+      "src": "10.20.0.23",
+      "sport": 51000,
+      "dst": "10.20.0.10",
+      "dport": 22,
+      "proto": "TCP",
+      "packets": 36,
+      "bytes": 1404,
+      "bytes_human": "1.4 KB",
+      "duration_s": 1728.838
+    },
+    {
+      "src": "10.20.0.1",
+      "sport": 53,
+      "dst": "10.20.0.21",
+      "dport": 51234,
+      "proto": "UDP",
+      "packets": 26,
+      "bytes": 1274,
+      "bytes_human": "1.2 KB",
+      "duration_s": 1764.482
+    },
+    {
+      "src": "10.20.0.22",
+      "sport": 51000,
+      "dst": "10.20.0.10",
+      "dport": 22,
+      "proto": "TCP",
+      "packets": 30,
+      "bytes": 1170,
+      "bytes_human": "1.1 KB",
+      "duration_s": 1216.08
+    },
+    {
+      "src": "10.20.0.21",
+      "sport": 51000,
+      "dst": "10.20.0.10",
+      "dport": 22,
+      "proto": "TCP",
+      "packets": 30,
+      "bytes": 1170,
+      "bytes_human": "1.1 KB",
+      "duration_s": 1068.219
+    },
+    {
+      "src": "10.20.0.23",
+      "sport": 51234,
+      "dst": "10.20.0.1",
+      "dport": 53,
+      "proto": "UDP",
+      "packets": 27,
+      "bytes": 999,
+      "bytes_human": "999 B",
+      "duration_s": 1727.773
+    },
+    {
+      "src": "10.20.0.21",
+      "sport": 51234,
+      "dst": "10.20.0.1",
+      "dport": 53,
+      "proto": "UDP",
+      "packets": 26,
+      "bytes": 858,
+      "bytes_human": "858 B",
+      "duration_s": 1764.482
+    },
+    {
+      "src": "10.20.0.21",
+      "sport": 49812,
+      "dst": "93.184.216.34",
+      "dport": 80,
+      "proto": "TCP",
+      "packets": 3,
+      "bytes": 363,
+      "bytes_human": "363 B",
+      "duration_s": 860.884
+    },
+    {
+      "src": "10.20.0.23",
+      "sport": 49812,
+      "dst": "93.184.216.34",
+      "dport": 80,
+      "proto": "TCP",
+      "packets": 3,
+      "bytes": 294,
+      "bytes_human": "294 B",
+      "duration_s": 207.522
+    }
+  ],
+  "top_hosts": [
+    {
+      "address": "10.20.0.1",
+      "scope": "internal",
+      "packets_out": 293,
+      "packets_in": 297,
+      "bytes_out": 16161,
+      "bytes_in": 15029,
+      "bytes_human": "30.5 KB",
+      "peers": 4,
+      "ports": 2,
+      "dns_queries": 0
+    },
+    {
+      "address": "10.20.0.22",
+      "scope": "internal",
+      "packets_out": 219,
+      "packets_in": 198,
+      "bytes_out": 11677,
+      "bytes_in": 11586,
+      "bytes_human": "22.7 KB",
+      "peers": 4,
+      "ports": 4,
+      "dns_queries": 184
+    },
+    {
+      "address": "10.20.0.21",
+      "scope": "internal",
+      "packets_out": 90,
+      "packets_in": 64,
+      "bytes_out": 2609,
+      "bytes_in": 2188,
+      "bytes_human": "4.7 KB",
+      "peers": 5,
+      "ports": 6,
+      "dns_queries": 26
+    },
+    {
+      "address": "10.20.0.23",
+      "scope": "internal",
+      "packets_out": 273,
+      "packets_in": 44,
+      "bytes_out": 2860,
+      "bytes_in": 1545,
+      "bytes_human": "4.3 KB",
+      "peers": 3,
+      "ports": 201,
+      "dns_queries": 27
+    },
+    {
+      "address": "10.20.0.10",
+      "scope": "internal",
+      "packets_out": 32,
+      "packets_in": 296,
+      "bytes_out": 0,
+      "bytes_in": 3744,
+      "bytes_human": "3.7 KB",
+      "peers": 3,
+      "ports": 1,
+      "dns_queries": 0
+    },
+    {
+      "address": "93.184.216.34",
+      "scope": "external",
+      "packets_out": 11,
+      "packets_in": 19,
+      "bytes_out": 266,
+      "bytes_in": 1031,
+      "bytes_human": "1.3 KB",
+      "peers": 3,
+      "ports": 2,
+      "dns_queries": 0
+    },
+    {
+      "address": "198.51.100.7",
+      "scope": "external",
+      "packets_out": 6,
+      "packets_in": 6,
+      "bytes_out": 840,
+      "bytes_in": 30,
+      "bytes_human": "870 B",
+      "peers": 2,
+      "ports": 4,
+      "dns_queries": 0
+    },
+    {
+      "address": "203.0.113.45",
+      "scope": "external",
+      "packets_out": 20,
+      "packets_in": 20,
+      "bytes_out": 740,
+      "bytes_in": 0,
+      "bytes_human": "740 B",
+      "peers": 1,
+      "ports": 3,
+      "dns_queries": 0
+    }
+  ],
+  "top_domains": [
+    {
+      "domain": "example.net",
+      "queries": 120
+    },
+    {
+      "domain": "example.com",
+      "queries": 50
+    },
+    {
+      "domain": "example.org",
+      "queries": 27
+    },
+    {
+      "domain": "playzpcgpijtsrycgepiyy.com",
+      "queries": 1
+    },
+    {
+      "domain": "hsjbstdalgevjbfklophkx.net",
+      "queries": 1
+    },
+    {
+      "domain": "lfdzjzcxrodxrdzftmobbb.org",
+      "queries": 1
+    },
+    {
+      "domain": "qsdnuwenslclxvxflfvcka.info",
+      "queries": 1
+    },
+    {
+      "domain": "upjeiddhdepirrdkohfsrb.biz",
+      "queries": 1
+    },
+    {
+      "domain": "qilgjmrgehxrqhdadbpzzw.com",
+      "queries": 1
+    },
+    {
+      "domain": "sgwxhcyfeianmtqdjsdcvs.net",
+      "queries": 1
+    }
+  ],
+  "alerts": [
+    {
+      "rule": "dns_anomaly",
+      "rule_name": "DNS anomaly",
+      "severity": "high",
+      "title": "10.20.0.22 got 40 NXDOMAIN answers for generated names",
+      "summary": "40 unanswered lookups, 40 unique names, entropy 3.76 bits/char",
+      "host": "10.20.0.22",
+      "description": "Many lookups for names that do not exist, with generated-looking labels. A domain generation algorithm walks through candidate controller names like this, and each miss returns NXDOMAIN.",
+      "evidence": {
+        "nxdomain_responses": 40,
+        "unique_names": 40,
+        "mean_entropy": 3.759,
+        "first_seen": "2026-10-21T08:06:40.010Z",
+        "last_seen": "2026-10-21T08:07:11.210Z",
+        "sample_names": [
+          "playzpcgpijtsrycgepiyy.com",
+          "hsjbstdalgevjbfklophkx.net",
+          "lfdzjzcxrodxrdzftmobbb.org",
+          "qsdnuwenslclxvxflfvcka.info",
+          "upjeiddhdepirrdkohfsrb.biz",
+          "qilgjmrgehxrqhdadbpzzw.com",
+          "sgwxhcyfeianmtqdjsdcvs.net",
+          "ghhtyzqwbhctkdbgtywfjk.org",
+          "czyosfaknznbczhexqvfez.info",
+          "lyegghvkwcazpbpqykcytu.biz",
+          "cgublzncuwlsfzpvyxpeiw.com",
+          "jbxozzvsfnmuzqjxsruudc.net"
+        ]
+      },
+      "packets": []
+    },
+    {
+      "rule": "dns_anomaly",
+      "rule_name": "DNS anomaly",
+      "severity": "high",
+      "title": "10.20.0.22 queried example.net 120 times with generated names",
+      "summary": "120 lookups, 120 unique names, mean label 30.0 chars, entropy 4.21 bits/char",
+      "host": "10.20.0.22",
+      "description": "A client asked one domain many times with names that look generated rather than typed: long labels, high per-character entropy, almost no repetition. Bulk random subdomains are how DNS tunnelling carries data out, and how some malware finds its controller.",
+      "evidence": {
+        "domain": "example.net",
+        "queries": 120,
+        "unique_names": 120,
+        "mean_label_length": 30.0,
+        "mean_entropy": 4.207,
+        "queries_per_second": 2.017,
+        "first_seen": "2026-10-21T08:05:00.000Z",
+        "last_seen": "2026-10-21T08:05:59.500Z",
+        "sample_names": [
+          "9zzzzg4zdmen2khvdgaj8gxbenyjqw.data.example.net",
+          "x4hh5344tfjgvq4k7bn7xj8b7tfq7x.data.example.net",
+          "kwo886vompzom75wbbr4qmw2wxfogo.data.example.net",
+          "4mvn4a4wfhym4l1vfz3zfkkibj3j4w.data.example.net",
+          "j99ibag7i1mnbqns6puq80idw3706i.data.example.net",
+          "8j76b2lajlj4h9du7794g9dpmrcg62.data.example.net",
+          "9be2u66mr26846p7q9m2i0hz2uep1e.data.example.net",
+          "nthjxjqi3ogz5kok16zv0mwufxbv93.data.example.net",
+          "2byv7s6ehogfqrclri1qzj865ufrdl.data.example.net",
+          "1erbfqfoeqh3av90ric7phkqdlmtt7.data.example.net",
+          "ns26lrwbqcab69m64p2g158z6tnovm.data.example.net",
+          "izwdiaeq1kdfy6spsc3lkr2aqxv9up.data.example.net"
+        ]
+      },
+      "packets": []
+    },
+    {
+      "rule": "port_scan",
+      "rule_name": "Port scan",
+      "severity": "high",
+      "title": "10.20.0.23 scanned 200 ports on 10.20.0.10",
+      "summary": "201 connection attempts to 200 distinct ports on 10.20.0.10 within 60s",
+      "host": "10.20.0.23",
+      "description": "One source touched many destination ports in a short window, and 100% of those attempts were a bare SYN with no handshake. That is the shape of a port scan, not of a program using a service.",
+      "evidence": {
+        "dst": "10.20.0.10",
+        "distinct_ports": 200,
+        "attempts": 201,
+        "syn_only_ratio": 1.0,
+        "window_s": 60.0,
+        "first_seen": "2026-10-21T08:01:56.080Z",
+        "last_seen": "2026-10-21T08:02:39.800Z",
+        "ports": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60
+        ],
+        "ports_total": 200
+      },
+      "packets": [
+        {
+          "packet": 41,
+          "hex": "02000000001002000000002308004500002800004000400626880a1400170a14000ac7380016000003e8000000005002faf0d5720000",
+          "bytes": 54
+        },
+        {
+          "packet": 45,
+          "hex": "02000000001002000000002308004500002800004000400626880a1400170a14000a9c400001000003e8000000005002faf000800000",
+          "bytes": 54
+        },
+        {
+          "packet": 46,
+          "hex": "02000000001002000000002308004500002800004000400626880a1400170a14000a9c410002000003e8000000005002faf0007e0000",
+          "bytes": 54
+        }
+      ]
+    },
+    {
+      "rule": "beaconing",
+      "rule_name": "Beaconing",
+      "severity": "medium",
+      "title": "10.20.0.21 contacted 203.0.113.45:8443 20 times at a fixed rhythm",
+      "summary": "interval 60.0s +/- 0.3s (CV 0.005) over 20 connections",
+      "host": "10.20.0.21",
+      "description": "A host opened the same destination port over and over with almost identical spacing. People and browsers do not do that; scheduled malware and some legitimate agents do. Low variance is the signal, not the volume.",
+      "evidence": {
+        "dst": "203.0.113.45",
+        "dport": 8443,
+        "proto": "TCP",
+        "connections": 20,
+        "source_ports": 3,
+        "mean_interval_s": 60.041,
+        "stdev_interval_s": 0.312,
+        "coefficient_of_variation": 0.0052,
+        "wire_bytes": 1080,
+        "packets": 20,
+        "intervals_sample_s": [
+          60.16,
+          60.12,
+          60.42,
+          59.37,
+          60.62,
+          60.05,
+          59.6,
+          60.11
+        ],
+        "first_seen": "2026-10-21T08:08:19.605Z",
+        "last_seen": "2026-10-21T08:27:20.391Z",
+        "duration_s": 1140.8
+      },
+      "packets": []
+    },
+    {
+      "rule": "cleartext_credentials",
+      "rule_name": "Cleartext credentials",
+      "severity": "medium",
+      "title": "10.20.0.21 sent FTP credentials without encryption to 198.51.100.7:21",
+      "summary": "1 credential exchange over TCP on port 21; secrets are redacted in this report",
+      "host": "10.20.0.21",
+      "description": "A password or authorisation header crossed the network in a protocol with no encryption. Anyone on the path can read it. The value itself is deliberately not reproduced here.",
+      "evidence": {
+        "dst": "198.51.100.7",
+        "dport": 21,
+        "proto": "TCP",
+        "findings": [
+          {
+            "protocol": "FTP",
+            "method": "USER/PASS",
+            "username": "y****f",
+            "secret": "[redacted]",
+            "secret_length": 10
+          }
+        ],
+        "secret_redacted": true
+      },
+      "packets": [
+        {
+          "packet": 768,
+          "hex": "02000000000102000000002108004500003500004000400606600a140015c6336407c2240015000003e8000000015018faf0bc4100005553455220796f756365660d0a",
+          "bytes": 67
+        },
+        {
+          "packet": 770,
+          "hex": "020000000001020000000021080045000039000040004006065c0a140015c6336407c2240015000003e8000000015018faf0911e00005041535320417469617332303236210d0a",
+          "bytes": 71
+        }
+      ]
+    },
+    {
+      "rule": "cleartext_credentials",
+      "rule_name": "Cleartext credentials",
+      "severity": "medium",
+      "title": "10.20.0.21 sent HTTP credentials without encryption to 93.184.216.34:80",
+      "summary": "1 credential exchange over TCP on port 80; secrets are redacted in this report",
+      "host": "10.20.0.21",
+      "description": "A password or authorisation header crossed the network in a protocol with no encryption. Anyone on the path can read it. The value itself is deliberately not reproduced here.",
+      "evidence": {
+        "dst": "93.184.216.34",
+        "dport": 80,
+        "proto": "TCP",
+        "findings": [
+          {
+            "protocol": "HTTP",
+            "method": "Basic authorization header",
+            "username": "y****f",
+            "secret": "[redacted]",
+            "secret_length": 19
+          }
+        ],
+        "secret_redacted": true
+      },
+      "packets": [
+        {
+          "packet": 155,
+          "hex": "02000000000102000000002108004500008a000040004006fa6a0a1400155db8d822c2940050000003e8000000005002faf0ce690000474554202f20485454502f312e310d0a486f73743a207777772e6578616d706c652e636f6d0d0a557365722d4167656e743a204d6f7a696c6c612f352e300d0a4163636570743a202a2f",
+          "bytes": 128
+        },
+        {
+          "packet": 264,
+          "hex": "02000000000102000000002108004500008a000040004006fa6a0a1400155db8d822c2940050000003e8000000005002faf0ce690000474554202f20485454502f312e310d0a486f73743a207777772e6578616d706c652e636f6d0d0a557365722d4167656e743a204d6f7a696c6c612f352e300d0a4163636570743a202a2f",
+          "bytes": 128
+        },
+        {
+          "packet": 772,
+          "hex": "0200000000010200000000210800450000cf000040004006fa250a1400155db8d822c2940050000003e8000000005002faf08d3c0000474554202f61646d696e20485454502f312e310d0a486f73743a20696e7472616e65742e6578616d706c652e6e65740d0a557365722d4167656e743a204d6f7a696c6c612f352e300d0a",
+          "bytes": 128
+        }
+      ]
+    },
+    {
+      "rule": "new_external_peer",
+      "rule_name": "New external peer",
+      "severity": "medium",
+      "title": "10.20.0.21 talked to 2 external addresses not present in the baseline",
+      "summary": "3314 bytes exchanged with 198.51.100.7, 203.0.113.45",
+      "host": "10.20.0.21",
+      "description": "The baseline was built from traffic that was considered normal. This host exchanged traffic with external addresses that never appeared in it. A new peer is not automatically bad, which is why this is medium and not high: it is the question to ask, not the answer.",
+      "evidence": {
+        "new_peers": [
+          "198.51.100.7",
+          "203.0.113.45"
+        ],
+        "new_peer_count": 2,
+        "wire_bytes": 3314,
+        "baseline_known_peers": 1
+      },
+      "packets": []
+    },
+    {
+      "rule": "new_external_peer",
+      "rule_name": "New external peer",
+      "severity": "medium",
+      "title": "10.20.0.22 talked to 1 external address not present in the baseline",
+      "summary": "1104 bytes exchanged with 198.51.100.7",
+      "host": "10.20.0.22",
+      "description": "The baseline was built from traffic that was considered normal. This host exchanged traffic with external addresses that never appeared in it. A new peer is not automatically bad, which is why this is medium and not high: it is the question to ask, not the answer.",
+      "evidence": {
+        "new_peers": [
+          "198.51.100.7"
+        ],
+        "new_peer_count": 1,
+        "wire_bytes": 1104,
+        "baseline_known_peers": 1
+      },
+      "packets": []
+    }
+  ],
+  "alert_count": 8,
+  "severity_counts": {
+    "high": 3,
+    "medium": 5
+  },
+  "rules": [
+    {
+      "rule": "port_scan",
+      "name": "Port scan",
+      "ran": true,
+      "alerts": 1,
+      "skipped_reason": null
+    },
+    {
+      "rule": "dns_anomaly",
+      "name": "DNS anomaly",
+      "ran": true,
+      "alerts": 2,
+      "skipped_reason": null
+    },
+    {
+      "rule": "beaconing",
+      "name": "Beaconing",
+      "ran": true,
+      "alerts": 1,
+      "skipped_reason": null
+    },
+    {
+      "rule": "cleartext_credentials",
+      "name": "Cleartext credentials",
+      "ran": true,
+      "alerts": 2,
+      "skipped_reason": null
+    },
+    {
+      "rule": "new_external_peer",
+      "name": "New external peer",
+      "ran": true,
+      "alerts": 2,
+      "skipped_reason": null
+    }
+  ],
+  "rule_summary": {
+    "total": 5,
+    "ran": 5,
+    "skipped": 0,
+    "alerts": 8
+  },
+  "baseline": {
+    "present": true,
+    "description": "5 hosts, 96 packets, built 2026-10-22T17:32:58Z",
+    "created": "2026-10-22T17:32:58Z"
+  },
+  "integrity": {
+    "truncated_packets": 0,
+    "parse_errors": 0,
+    "dns_parse_errors": 0,
+    "connection_events_truncated": false,
+    "raw_samples_truncated": false,
+    "raw_samples_retained": 944,
+    "vlans": []
+  },
+  "limitations": [
+    "Address scope treats reserved and private ranges as internal. A destination outside them is called external without knowing your actual LAN layout."
+  ]
+}

@@ -1,0 +1,24 @@
+# Serve a report over HTTP with the standard library only.
+#
+#   sudo cp deploy/netwatch.service /etc/systemd/system/
+#   sudo systemctl edit netwatch.service   # set the report path and host
+#   sudo systemctl enable --now netwatch
+[Unit]
+Description=NetWatch dashboard
+After=network-online.target
+
+[Service]
+Type=simple
+User=netwatch
+Group=netwatch
+ExecStart=/usr/bin/env netwatch serve --report /var/lib/netwatch/report.json --host 0.0.0.0 --port 8080
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/var/lib/netwatch
+
+[Install]
+WantedBy=multi-user.target

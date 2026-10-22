@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netwatch-telemetry"
+version = "1.0.0"
+description = "Network telemetry and anomaly detection from packet captures, with no runtime dependencies"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Youcef Bougraim" }]
+keywords = ["pcap", "network", "security", "anomaly-detection", "dns", "telemetry"]
+classifiers = [
+  "Environment :: Console",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: System :: Networking :: Monitoring",
+  "Topic :: Security",
+]
+# No runtime dependencies. The core reads pcap and pcapng itself and serves the
+# dashboard with http.server, so installing this package never pulls a
+# transitive dependency into a network-analysis path.
+dependencies = []
+
+[project.scripts]
+netwatch = "netwatch.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/bougraimyou/netwatch"
+"Live demo" = "https://bougraimyou.github.io/netwatch/"
+
+[tool.setuptools]
+packages = ["netwatch"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+netwatch = ["static/*"]
+
+[tool.setuptools.exclude-package-data]
+netwatch = ["__pycache__/*"]
